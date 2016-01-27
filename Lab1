@@ -33,6 +33,7 @@ o) CREATE VIEW AverageGrade AS SELECT firstName, lastName AVG(grade) as 'avgGrad
 SELECT firstName, lastName, MAX(avgGrade) FROM AverageGrade;
 SELECT * FROM AverageGrade WHERE avgGrade>4 ORDER BY avgGrade DESC;
 
-p)
+p) CREATE VIEW CredSum AS SELECT pNbr, sum(credits) AS 'sum' FROM courses NATURAL JOIN takenCourses GROUP BY pNbr;
+SELECT students.pNbr, COALESCE(sum,0) FROM students LEFT OUTER JOIN credSum ON students.pNbr=credSum.pNbr ORDER BY sum;
 
 q) SELECT DISTINCT s1.* FROM students AS s1, students AS s2 WHERE s1.firstName=s2.firstName AND s1.lastName=s2.lastName AND s1.pNbr<>s2.pNbr;
