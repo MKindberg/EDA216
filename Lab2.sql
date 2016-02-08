@@ -5,7 +5,7 @@ DROP TABLE IF EXISTS  theatres;
 DROP TABLE IF EXISTS  movies;
 DROP TABLE IF EXISTS reservations;
 DROP TABLE IF EXISTS  performances;
-
+SET FOREIGN_KEY_CHECKS = 1;
 
 CREATE TABLE users
 (
@@ -19,7 +19,7 @@ PRIMARY KEY(username)
 CREATE TABLE theatres
 (
 name char(15),
-seats int NOT NULL,
+seats int NOT NULL CHECK (seats>0),
 PRIMARY KEY(name)
 );
 
@@ -33,10 +33,11 @@ CREATE TABLE performances
 (
 title char(20),
 day date,
-freeSeats int NOT NULL,
+freeSeats int NOT NULL CHECK (freeSeats>=0),
 theatreName char(15),
 PRIMARY KEY(title, day),
-FOREIGN KEY (theatreName) REFERENCES theatres(name) ON DELETE CASCADE
+FOREIGN KEY(title) REFERENCES movies(title) ON UPDATE CASCADE,
+FOREIGN KEY(theatreName) REFERENCES theatres(name) ON UPDATE CASCADE
 );
 
 CREATE TABLE reservations
@@ -46,8 +47,8 @@ username char(15),
 title char(20),
 day Date,
 PRIMARY KEY(refNbr),
-FOREIGN KEY (username) REFERENCES users(username) ON DELETE CASCADE,
-FOREIGN KEY (title, day) REFERENCES performances(title, day) ON DELETE CASCADE
+FOREIGN KEY(username) REFERENCES users(username) ON UPDATE CASCADE,
+FOREIGN KEY(title, day) REFERENCES performances(title, day) ON UPDATE CASCADE
 );
 
 
@@ -83,4 +84,6 @@ UPDATE performances SET freeSeats=freeSeats-1 WHERE title="Deadpool" AND day='20
 
 INSERT INTO movies VALUES("Creed");
 INSERT INTO performances VALUES("Deadpool", '2016-02-08', 90, "Filmstaden");
+INSERT INTO reservations (username, title, day) VALUES("ger", "Creed", '2016-02-06');
 INSERT INTO performances VALUES("4", '2016-02-10', 90, "avbs");
+INSERT INTO theatres VALUES("b", -10);
