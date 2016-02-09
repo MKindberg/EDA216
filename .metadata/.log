@@ -12,3 +12,15 @@ user global configuration and to define the default location to store repositori
 not correct please set the HOME environment variable and restart Eclipse. Otherwise Git for Windows and
 EGit might behave differently since they see different configuration options.
 This warning can be switched off on the Team > Git > Confirmations and Warnings preference page.
+
+!ENTRY org.eclipse.ui 4 4 2016-02-09 20:50:33.651
+!MESSAGE Conflicting handlers for org.eclipse.ui.navigate.backwardHistory: {ActionHandler(org.eclipse.ui.internal.NavigationHistoryAction@4f8659d0)} vs {ActionHandler(org.eclipse.ui.internal.dialogs.PreferencePageHistory$1@35c7c803)}
+
+!ENTRY org.eclipse.ui 4 4 2016-02-09 20:50:33.716
+!MESSAGE Conflicting handlers for org.eclipse.ui.navigate.backwardHistory: {ActionHandler(org.eclipse.ui.internal.NavigationHistoryAction@4f8659d0)} vs {ActionHandler(org.eclipse.ui.internal.dialogs.PreferencePageHistory$1@35c7c803)}
+
+!ENTRY org.eclipse.ui 4 4 2016-02-09 20:50:33.725
+!MESSAGE Conflicting handlers for org.eclipse.ui.navigate.forwardHistory: {ActionHandler(org.eclipse.ui.internal.dialogs.PreferencePageHistory$2@65ed7661)} vs {ActionHandler(org.eclipse.ui.internal.NavigationHistoryAction@3b4bd341)}
+
+!ENTRY org.eclipse.ui 4 4 2016-02-09 20:50:33.734
+!MESSAGE Conflicting handlers for org.eclipse.ui.navigate.forwardHistory: {ActionHandler(org.eclipse.ui.internal.dialogs.PreferencePageHistory$2@65ed7661)} vs {ActionHandler(org.eclipse.ui.internal.NavigationHistoryAction@3b4bd341)}
