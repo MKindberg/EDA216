@@ -1,6 +1,10 @@
 package dbtLab3;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 /**
  * Database is a class that specifies the interface to the movie database. Uses
@@ -35,9 +39,7 @@ public class Database {
 	public boolean openConnection(String userName, String password) {
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
-			conn = DriverManager.getConnection(
-					"jdbc:mysql://puccini.cs.lth.se/" + userName, userName,
-					password);
+			conn = DriverManager.getConnection("jdbc:mysql://puccini.cs.lth.se/" + userName, userName, password);
 		} catch (SQLException e) {
 			e.printStackTrace();
 			return false;
@@ -53,9 +55,8 @@ public class Database {
 	 */
 	public void closeConnection() {
 		try {
-			if (conn != null) {
+			if (conn != null)
 				conn.close();
-			}
 		} catch (SQLException e) {
 		}
 		conn = null;
@@ -72,4 +73,17 @@ public class Database {
 
 	/* --- insert own code here --- */
 
+	public boolean isUser(String userId) {
+		String s = "SELECT username FROM users WHERE username = ?";
+		try {
+			PreparedStatement ps = conn.prepareStatement(s);
+			ps.setString(1, userId);
+			ResultSet rs = ps.executeQuery();
+			return rs.next();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
 }

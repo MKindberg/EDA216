@@ -1,10 +1,13 @@
 package dbtLab3;
 
-import javax.swing.*;
-import javax.swing.event.*;
+import java.awt.BorderLayout;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
-import java.awt.*;
-import java.awt.event.*;
+import javax.swing.JFrame;
+import javax.swing.JTabbedPane;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 /**
  * MovieGUI is the user interface to the movie database. It sets up the main
@@ -35,8 +38,7 @@ public class MovieGUI {
 		tabbedPane = new JTabbedPane();
 
 		UserLoginPane userLoginPane = new UserLoginPane(db);
-		tabbedPane.addTab("User login", null, userLoginPane,
-				"Log in as a new user");
+		tabbedPane.addTab("User login", null, userLoginPane, "Log in as a new user");
 
 		BookingPane bookingPane = new BookingPane(db);
 		tabbedPane.addTab("Book ticket", null, bookingPane, "Book a ticket");
@@ -52,14 +54,13 @@ public class MovieGUI {
 		frame.setVisible(true);
 
 		userLoginPane.displayMessage("Connecting to database ...");
-		
+
 		/* --- change code here --- */
 		/* --- change xxx to your user name, yyy to your password --- */
-		if (db.openConnection("xxx", "yyy")) {
+		if (db.openConnection("db93", "db93"))
 			userLoginPane.displayMessage("Connected to database");
-		} else {
+		else
 			userLoginPane.displayMessage("Could not connect to database");
-		}
 	}
 
 	/**
@@ -74,8 +75,7 @@ public class MovieGUI {
 		 *            The change event (not used).
 		 */
 		public void stateChanged(ChangeEvent e) {
-			BasicPane selectedPane = (BasicPane) tabbedPane
-					.getSelectedComponent();
+			BasicPane selectedPane = (BasicPane) tabbedPane.getSelectedComponent();
 			selectedPane.entryActions();
 		}
 	}
