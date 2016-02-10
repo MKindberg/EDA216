@@ -194,12 +194,14 @@ public class BookingPane extends BasicPane {
 	 * Fetch performance dates from the database and display them in the date
 	 * list.
 	 */
-	private void fillDateList(String movie) {
+	private void fillDateList() {
 		dateListModel.removeAllElements();
 		/* --- insert own code here --- */
-		ArrayList<String> dates = db.getDates(movie);
-		for (String date : dates)
-			dateListModel.addElement(date);
+		ArrayList<String> dates = db.getMovies();
+		if(dates.isEmpty())
+			nameListModel.addElement("No performances");
+			for (String date : dates)
+			nameListModel.addElement(date);
 	}
 
 	/**
@@ -227,8 +229,6 @@ public class BookingPane extends BasicPane {
 				return;
 			String movieName = nameList.getSelectedValue();
 			/* --- insert own code here --- */
-			fillDateList(movieName);
-
 		}
 	}
 

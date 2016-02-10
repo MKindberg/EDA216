@@ -86,33 +86,18 @@ public class Database {
 			return false;
 		}
 	}
-
-	public ArrayList<String> getMovies() {
+	
+	public String[] getMovieNames(){
 		String s = "SELECT title FROM movies";
 		ArrayList<String> res = new ArrayList<String>();
 		try {
 			PreparedStatement ps = conn.prepareStatement(s);
 			ResultSet rs = ps.executeQuery();
-			while (rs.next())
+			while(rs.next())
 				res.add(rs.getString("title"));
 		} catch (SQLException e) {
-			e.printStackTrace();
+			return null;
 		}
-		return res;
-	}
-
-	public ArrayList<String> getDates(String movie) {
-		String s = "SELECT day FROM performances WHERE title = ?";
-		ArrayList<String> res = new ArrayList<String>();
-		try {
-			PreparedStatement ps = conn.prepareStatement(s);
-			ps.setString(1, movie);
-			ResultSet rs = ps.executeQuery();
-			while (rs.next())
-				res.add(rs.getString("day"));
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return res;
+		
 	}
 }

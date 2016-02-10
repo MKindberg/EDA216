@@ -5,7 +5,6 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 
 /**
  * Database is a class that specifies the interface to the movie database. Uses
@@ -85,34 +84,5 @@ public class Database {
 		} catch (SQLException e) {
 			return false;
 		}
-	}
-
-	public ArrayList<String> getMovies() {
-		String s = "SELECT title FROM movies";
-		ArrayList<String> res = new ArrayList<String>();
-		try {
-			PreparedStatement ps = conn.prepareStatement(s);
-			ResultSet rs = ps.executeQuery();
-			while (rs.next())
-				res.add(rs.getString("title"));
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return res;
-	}
-
-	public ArrayList<String> getDates(String movie) {
-		String s = "SELECT day FROM performances WHERE title = ?";
-		ArrayList<String> res = new ArrayList<String>();
-		try {
-			PreparedStatement ps = conn.prepareStatement(s);
-			ps.setString(1, movie);
-			ResultSet rs = ps.executeQuery();
-			while (rs.next())
-				res.add(rs.getString("day"));
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return res;
 	}
 }

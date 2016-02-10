@@ -199,7 +199,7 @@ public class BookingPane extends BasicPane {
 		/* --- insert own code here --- */
 		ArrayList<String> dates = db.getDates(movie);
 		for (String date : dates)
-			dateListModel.addElement(date);
+			nameListModel.addElement(date);
 	}
 
 	/**
@@ -227,8 +227,7 @@ public class BookingPane extends BasicPane {
 				return;
 			String movieName = nameList.getSelectedValue();
 			/* --- insert own code here --- */
-			fillDateList(movieName);
-
+			
 		}
 	}
 

@@ -1,23 +1,10 @@
 package dbtLab3;
 
-import java.awt.FlowLayout;
-import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.ArrayList;
+import javax.swing.*;
+import javax.swing.event.*;
 
-import javax.swing.BoxLayout;
-import javax.swing.DefaultListModel;
-import javax.swing.JButton;
-import javax.swing.JComponent;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextField;
-import javax.swing.ListSelectionModel;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
+import java.awt.*;
+import java.awt.event.*;
 
 /**
  * The GUI pane where a user books tickets for movie performances. It contains
@@ -165,7 +152,8 @@ public class BookingPane extends BasicPane {
 	public JComponent createBottomPanel() {
 		JButton[] buttons = new JButton[1];
 		buttons[0] = new JButton("Book ticket");
-		return new ButtonAndMessagePanel(buttons, messageLabel, new ActionHandler());
+		return new ButtonAndMessagePanel(buttons, messageLabel,
+				new ActionHandler());
 	}
 
 	/**
@@ -184,30 +172,25 @@ public class BookingPane extends BasicPane {
 	 */
 	private void fillNameList() {
 		nameListModel.removeAllElements();
-		/* --- insert own code here --- */
-		ArrayList<String> movies = db.getMovies();
-		for (String movie : movies)
-			nameListModel.addElement(movie);
+        /* --- insert own code here --- */
 	}
 
 	/**
 	 * Fetch performance dates from the database and display them in the date
 	 * list.
 	 */
-	private void fillDateList(String movie) {
+	private void fillDateList() {
 		dateListModel.removeAllElements();
-		/* --- insert own code here --- */
-		ArrayList<String> dates = db.getDates(movie);
-		for (String date : dates)
-			dateListModel.addElement(date);
+        /* --- insert own code here --- */
 	}
 
 	/**
 	 * Clear all text fields.
 	 */
 	private void clearFields() {
-		for (int i = 0; i < fields.length; i++)
+		for (int i = 0; i < fields.length; i++) {
 			fields[i].setText("");
+		}
 	}
 
 	/**
@@ -223,12 +206,11 @@ public class BookingPane extends BasicPane {
 		 *            The selected list item.
 		 */
 		public void valueChanged(ListSelectionEvent e) {
-			if (nameList.isSelectionEmpty())
+			if (nameList.isSelectionEmpty()) {
 				return;
+			}
 			String movieName = nameList.getSelectedValue();
 			/* --- insert own code here --- */
-			fillDateList(movieName);
-
 		}
 	}
 
@@ -245,8 +227,9 @@ public class BookingPane extends BasicPane {
 		 *            The selected list item.
 		 */
 		public void valueChanged(ListSelectionEvent e) {
-			if (nameList.isSelectionEmpty() || dateList.isSelectionEmpty())
+			if (nameList.isSelectionEmpty() || dateList.isSelectionEmpty()) {
 				return;
+			}
 			String movieName = nameList.getSelectedValue();
 			String date = dateList.getSelectedValue();
 			/* --- insert own code here --- */
@@ -266,8 +249,9 @@ public class BookingPane extends BasicPane {
 		 *            The event object (not used).
 		 */
 		public void actionPerformed(ActionEvent e) {
-			if (nameList.isSelectionEmpty() || dateList.isSelectionEmpty())
+			if (nameList.isSelectionEmpty() || dateList.isSelectionEmpty()) {
 				return;
+			}
 			if (!CurrentUser.instance().isLoggedIn()) {
 				displayMessage("Must login first");
 				return;

@@ -100,7 +100,7 @@ public class Database {
 		}
 		return res;
 	}
-
+	
 	public ArrayList<String> getDates(String movie) {
 		String s = "SELECT day FROM performances WHERE title = ?";
 		ArrayList<String> res = new ArrayList<String>();
