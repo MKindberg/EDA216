@@ -250,6 +250,11 @@ public class BookingPane extends BasicPane {
 			String movieName = nameList.getSelectedValue();
 			String date = dateList.getSelectedValue();
 			/* --- insert own code here --- */
+			Performance p = db.getPerformance(movieName, date);
+			fields[MOVIE_NAME].setText(p.getTitle());
+			fields[PERF_DATE].setText(p.getDate());
+			fields[THEATER_NAME].setText(p.getTheatre());
+			fields[FREE_SEATS].setText("" + p.getFreeSeats());
 		}
 	}
 
@@ -275,6 +280,9 @@ public class BookingPane extends BasicPane {
 			String movieName = nameList.getSelectedValue();
 			String date = dateList.getSelectedValue();
 			/* --- insert own code here --- */
+			boolean b = db.book(CurrentUser.instance().getCurrentUserId(), movieName, date);
+			if (!b)
+				displayMessage("Error, no tickets left");
 		}
 	}
 }

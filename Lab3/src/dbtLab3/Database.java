@@ -115,4 +115,93 @@ public class Database {
 		}
 		return res;
 	}
+
+	public String getTheatre(String movie, String date) {
+		try {
+			String s = "SELECT theatreName FROM performances WHERE title = ? AND day = ?";
+			PreparedStatement ps = conn.prepareStatement(s);
+			ps.setString(1, movie);
+			ps.setString(2, date);
+			ResultSet rs = ps.executeQuery();
+			if (rs.next())
+				return rs.getString("theatreName");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return null;
+
+	}
+
+	public int getFreeSeats(String movie, String date) {
+		try {
+			String s = "SELECT freeSeats FROM performances WHERE title = ? AND day = ?";
+			PreparedStatement ps = conn.prepareStatement(s);
+			ps.setString(1, movie);
+			ps.setString(2, date);
+			ResultSet rs = ps.executeQuery();
+			if (rs.next())
+				return rs.getInt("freeSeats");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return 0;
+	}
+
+	public Performance getPerformance(String movie, String date) {
+		Performance p = null;
+		try {
+			String s = "SELECT theatreName, freeSeats FROM performances WHERE title = ? AND day = ?";
+			PreparedStatement ps = conn.prepareStatement(s);
+			ps.setString(1, movie);
+			ps.setString(2, date);
+			ResultSet rs = ps.executeQuery();
+			if (rs.next()) {
+				String theatre = rs.getString("theatreName");
+				int freeSeats = rs.getInt("freeSeats");
+				p = new Performance(movie, date, theatre, freeSeats);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return p;
+	}
+
+	public boolean book(String user, String movie, String date) {
+		try {
+			PreparedStatement ps = conn.prepareStatement("START TRANSACTION");
+			ps.executeQuery();
+
+			String l = "SELECT * FROM performances WHERE title=? AND day=? FOR UPDATE";
+			ps = conn.prepareStatement(l);
+			ps.setString(1, movie);
+			ps.setString(2, date);
+			ps.executeQuery();
+
+			String s1 = "UPDATE performances SET freeSeats=freeSeats-1 WHERE title=? AND day=?";
+			ps = conn.prepareStatement(s1);
+			ps.setString(1, movie);
+			ps.setString(2, date);
+			ps.executeUpdate();
+
+			if (getFreeSeats(movie, date) < 0)
+				ps.execute("ROLLBACK");
+			else {
+				ps.execute("COMMIT");
+
+				String s2 = "INSERT INTO reservations (username, title, day) VALUES(?, ?, ?)";
+				ps = conn.prepareStatement(s2);
+				ps.setString(1, user);
+				ps.setString(2, movie);
+				ps.setString(3, date);
+				ps.executeUpdate();
+
+				return true;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
 }
