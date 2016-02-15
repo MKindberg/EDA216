@@ -12,8 +12,8 @@
     $theatre=$db->getThreatre($movie, $date);
     $seats=$db->getFreeSeats($movie, $date);
     $db->closeConnection();
-    
-    $_SESSION['theatre']=$threatre;
+
+    $_SESSION['theatre']=$theatre;
     $_SESSION['seats']=$seats;
 ?>
 

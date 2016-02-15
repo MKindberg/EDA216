@@ -36,7 +36,7 @@
 			}
 		?>
     </select>
-    <input type=submit value="Select movie">
+    <input type=submit value="Select date">
 	</form>
 </body>
 </html>

@@ -95,7 +95,7 @@ class Database {
         try {
 			$stmt = $this->conn->prepare($query);
 			$stmt->execute($param);
-			$count = $stmt->fetchAll();
+            $count = $stmt->rowCount();
 		} catch (PDOException $e) {
 			$error = "*** Internal error: " . $e->getMessage() . "<p>" . $query;
 			die($error);
@@ -146,23 +146,27 @@ class Database {
          return $result[0][0];
      }
 
-     public function getFreeSeats($user, $movie, $date){
+     public function getFreeSeats($movie, $date){
          $sql = "select freeSeats from performances where title=? and day=?";
          $result = $this->executeQuery($sql, array($movie, $date));
          return $result[0][0];
      }
 
-     public function book($movie, $date){
-         $sql1 = "update performances set freeSeats=freeSeats-1 where title=? and day=?;";
-         $result = $this->executeUpdate($sql1, array($movie, $date));
-         if($result==1){
+     public function book($user, $movie, $date){
+         $this->conn->beginTransaction();
+         $sql1 = "update performances set freeSeats=freeSeats-1 where title=? and day=?";
+         $this->executeUpdate($sql1, array($movie, $date));
+         if($this->getFreeSeats>=0){
              $sql2 = "insert into reservations (username, title, day) values(?, ?, ?)";
-             $this->executeUpdate($sql1, array($movie, $date));
-             $sql3 = "select refNbr from reservations";
+             $this->executeUpdate($sql2, array($user, $movie, $date));
+             $sql3 = "select refNbr from reservations order by refNbr desc limit 1";
              $result = $this->executeQuery($sql3);
-             return $result[0][count($result)-1];
+             $this->conn->commit();
+             return $result[0][0];
+         }else{
+             $this->conn.rollback();
+             return 0;
          }
-         return 0;
      }
 }
 ?>
