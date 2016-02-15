@@ -1,11 +1,11 @@
 <?php
 	require_once('database.inc.php');
-	
+
 	session_start();
 	$db = $_SESSION['db'];
 	$userId = $_SESSION['userId'];
 	$db->openConnection();
-	
+
 	$movieNames = $db->getMovieNames();
 	$db->closeConnection();
 ?>
@@ -16,7 +16,7 @@
 	Current user: <?php print $userId ?>
 	<p>
 	Movies showing:
-	<p>
+    <p>
 	<form method=post action="booking2.php">
 		<select name="movieName" size=10>
 		<?php
@@ -31,7 +31,7 @@
 				print $name;
 			}
 		?>
-		</select>		
+		</select>
 		<input type=submit value="Select movie">
 	</form>
 </body>

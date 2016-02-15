@@ -14,7 +14,7 @@ class Database {
 	private $password;
 	private $database;
 	private $conn;
-	
+
 	/**
 	 * Constructs a database object for the specified user.
 	 */
@@ -24,18 +24,18 @@ class Database {
 		$this->password = $password;
 		$this->database = $database;
 	}
-	
-	/** 
+
+	/**
 	 * Opens a connection to the database, using the earlier specified user
 	 * name and password.
 	 *
-	 * @return true if the connection succeeded, false if the connection 
-	 * couldn't be opened or the supplied user name and password were not 
+	 * @return true if the connection succeeded, false if the connection
+	 * couldn't be opened or the supplied user name and password were not
 	 * recognized.
 	 */
 	public function openConnection() {
 		try {
-			$this->conn = new PDO("mysql:host=$this->host;dbname=$this->database", 
+			$this->conn = new PDO("mysql:host=$this->host;dbname=$this->database",
 					$this->userName,  $this->password);
 			$this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		} catch (PDOException $e) {
@@ -46,7 +46,7 @@ class Database {
 		}
 		return true;
 	}
-	
+
 	/**
 	 * Closes the connection to the database.
 	 */
@@ -63,12 +63,12 @@ class Database {
 	public function isConnected() {
 		return isset($this->conn);
 	}
-	
+
 	/**
 	 * Execute a database query (select).
 	 *
 	 * @param $query The query string (SQL), with ? placeholders for parameters
-	 * @param $param Array with parameters 
+	 * @param $param Array with parameters
 	 * @return The result set
 	 */
 	private function executeQuery($query, $param = null) {
@@ -82,33 +82,87 @@ class Database {
 		}
 		return $result;
 	}
-	
+
 	/**
 	 * Execute a database update (insert/delete/update).
 	 *
 	 * @param $query The query string (SQL), with ? placeholders for parameters
-	 * @param $param Array with parameters 
+	 * @param $param Array with parameters
 	 * @return The number of affected rows
 	 */
 	private function executeUpdate($query, $param = null) {
 		// ...
+        try {
+			$stmt = $this->conn->prepare($query);
+			$stmt->execute($param);
+			$count = $stmt->fetchAll();
+		} catch (PDOException $e) {
+			$error = "*** Internal error: " . $e->getMessage() . "<p>" . $query;
+			die($error);
+		}
+		return $count;
 	}
-	
+
 	/**
 	 * Check if a user with the specified user id exists in the database.
 	 * Queries the Users database table.
 	 *
-	 * @param userId The user id 
+	 * @param userId The user id
 	 * @return true if the user exists, false otherwise.
 	 */
 	public function userExists($userId) {
-		$sql = "select userId from Users where userId = ?";
+		$sql = "select username from Users where username = ?";
 		$result = $this->executeQuery($sql, array($userId));
-		return count($result) == 1; 
+		return count($result) == 1;
 	}
 
 	/*
 	 * *** Add functions ***
 	 */
+
+     public function getMovieNames(){
+         $sql = "select title from movies";
+         $result = $this->executeQuery($sql);
+         $res = array();
+         for($i=0;$i<count($result);$i++){
+             $res[$i] = $result[$i][0];
+         }
+         return $res;
+     }
+
+     public function getDates($movie){
+         $sql = "select day from performances where title=?";
+         $result = $this->executeQuery($sql, array($movie));
+         $res = array();
+         for($i=0;$i<count($result);$i++){
+             $res[$i] = $result[$i][0];
+         }
+         return $res;
+     }
+
+     public function getThreatre($movie, $date){
+         $sql = "select theatrename from performances where title=? and day=?";
+         $result = $this->executeQuery($sql, array($movie, $date));
+         return $result[0][0];
+     }
+
+     public function getFreeSeats($user, $movie, $date){
+         $sql = "select freeSeats from performances where title=? and day=?";
+         $result = $this->executeQuery($sql, array($movie, $date));
+         return $result[0][0];
+     }
+
+     public function book($movie, $date){
+         $sql1 = "update performances set freeSeats=freeSeats-1 where title=? and day=?;";
+         $result = $this->executeUpdate($sql1, array($movie, $date));
+         if($result==1){
+             $sql2 = "insert into reservations (username, title, day) values(?, ?, ?)";
+             $this->executeUpdate($sql1, array($movie, $date));
+             $sql3 = "select refNbr from reservations";
+             $result = $this->executeQuery($sql3);
+             return $result[0][count($result)-1];
+         }
+         return 0;
+     }
 }
 ?>
