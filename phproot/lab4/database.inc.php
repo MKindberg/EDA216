@@ -156,7 +156,7 @@ class Database {
          $this->conn->beginTransaction();
          $sql1 = "update performances set freeSeats=freeSeats-1 where title=? and day=?";
          $this->executeUpdate($sql1, array($movie, $date));
-         if($this->getFreeSeats>=0){
+         if($this->getFreeSeats($movie, $date)>=0){
              $sql2 = "insert into reservations (username, title, day) values(?, ?, ?)";
              $this->executeUpdate($sql2, array($user, $movie, $date));
              $sql3 = "select refNbr from reservations order by refNbr desc limit 1";
@@ -164,7 +164,7 @@ class Database {
              $this->conn->commit();
              return $result[0][0];
          }else{
-             $this->conn.rollback();
+             $this->conn->rollback();
              return 0;
          }
      }
